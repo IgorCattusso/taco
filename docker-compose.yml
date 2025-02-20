@@ -1,0 +1,39 @@
+networks:
+  taco_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+  taco_postgres:
+    image: postgres:alpine3.13
+    container_name: taco_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: taco
+      POSTGRES_PASSWORD: taco
+      POSTGRES_DB: taco
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - taco_network
+
+  taco:
+    build:
+      context: .
+      target: taco_svc
+    ports:
+      - "8080:8080"
+    depends_on:
+      - taco_postgres
+    networks:
+      - taco_network
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    container_name: taco
