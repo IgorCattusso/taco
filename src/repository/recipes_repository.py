@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from injector import inject
 from psycopg2 import pool
 

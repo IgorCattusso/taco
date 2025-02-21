@@ -14,7 +14,7 @@ from src.use_cases.recipes_use_cases.print_recipe_use_case import PrintRecipeUse
 from src.taco_injector_module import TacoModule
 
 
-sys.path.append('/app')  # required due to the fact that the app is running inside a docker container
+sys.path.append('/app')
 
 
 def _get_db_pool():
@@ -65,8 +65,6 @@ def create_app():
 
 
 if __name__ == "__main__":
-    # Create APP
     taco_app = create_app()
 
-    # Start server
     serve(taco_app, host='0.0.0.0', port=9000)
