@@ -5,8 +5,11 @@ from flask import Flask
 from injector import Module
 from psycopg2 import pool
 
-# Configuration and Controllers
+# Configuration
 from src.config import Config
+
+# Controllers
+from src.controllers.controller import TestController
 
 # Repositories
 from src.repository.recipes_repository import RecipesRepository, RecipesRepositoryImpl
@@ -14,7 +17,8 @@ from src.repository.recipes_repository import RecipesRepository, RecipesReposito
 # Services
 
 # Use Cases
-from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase, GenerateShoppingListUseCaseImpl
+from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase, \
+    GenerateShoppingListUseCaseImpl
 from src.use_cases.recipes_use_cases.print_recipe_use_case import PrintRecipeUseCase, PrintRecipeUseCaseImpl
 
 
@@ -34,14 +38,12 @@ class TacoModule(Module):
         # Database repositories
         binder.bind(RecipesRepository, to=RecipesRepositoryImpl)
 
-        # APIs
-
         # Use cases
         binder.bind(GenerateShoppingListUseCase, to=GenerateShoppingListUseCaseImpl)
         binder.bind(PrintRecipeUseCase, to=PrintRecipeUseCaseImpl)
 
         # Controllers
-        
+        binder.bind(TestController, to=TestController)
 
         # Other dependencies
         binder.bind(pool.SimpleConnectionPool, to=self.conn_pool)
