@@ -1,3 +1,4 @@
+# Standard Library
 import sys
 
 # Third-Party Libraries
@@ -10,7 +11,7 @@ from waitress import serve
 from src.config import Config
 from src.controllers.controller import TestController
 from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase
-from src.use_cases.recipes_use_cases.print_recipe_use_case import PrintRecipeUseCase
+from src.use_cases.recipes_use_cases.get_recipe_use_case import GetRecipeUseCase
 from src.taco_injector_module import TacoModule
 
 

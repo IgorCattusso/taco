@@ -25,7 +25,7 @@ from src.services.utils.utils import Utils, UtilsImpl
 # Use Cases
 from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase, \
      GenerateShoppingListUseCaseImpl
-from src.use_cases.recipes_use_cases.print_recipe_use_case import PrintRecipeUseCase, PrintRecipeUseCaseImpl
+from src.use_cases.recipes_use_cases.get_recipe_use_case import GetRecipeUseCase, GetRecipeUseCaseImpl
 
 
 class TacoModule(Module):
@@ -54,7 +54,7 @@ class TacoModule(Module):
 
         # Use cases
         binder.bind(GenerateShoppingListUseCase, to=GenerateShoppingListUseCaseImpl)
-        binder.bind(PrintRecipeUseCase, to=PrintRecipeUseCaseImpl)
+        binder.bind(GetRecipeUseCase, to=GetRecipeUseCaseImpl)
 
         # Controllers
         binder.bind(TestController, to=TestController)

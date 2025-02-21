@@ -1,8 +1,11 @@
+# Standard Library
 from abc import ABC, abstractmethod
 
+# Third-Party Libraries
 from injector import inject
 from psycopg2 import pool
 
+# Project-specific Modules
 from src.entities.ingredients import Ingredients
 
 

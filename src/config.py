@@ -1,4 +1,7 @@
+# Standard Library
 import os
+
+# Third-Party Libraries
 from dotenv import load_dotenv
 
 class Config:
