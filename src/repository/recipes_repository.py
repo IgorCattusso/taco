@@ -6,15 +6,18 @@ from injector import inject
 from psycopg2 import pool
 
 # Project-specific Modules
-from src.entities.recipes import Recipes
+from src.entities.recipes import Recipe, RecipeIngredients
 
 
 class RecipesRepository(ABC):
     @abstractmethod
-    def get_all_recipes(self) -> list[Recipes] | None:
+    def get_all_recipes(self) -> list[Recipe] | None:
         pass
 
-    def get_recipe_by_uuid(self, recipe_uuid: str) -> Recipes | None:
+    def get_recipe(self, recipe_uuid: str) -> Recipe | None:
+        pass
+
+    def get_recipe_by_dish_uuid(self, dish_uuid: str) -> list[RecipeIngredients] | None:
         pass
 
 
@@ -23,7 +26,7 @@ class RecipesRepositoryImpl(RecipesRepository):
     def __init__(self, conn_pool: pool.SimpleConnectionPool):
         self.conn_pool = conn_pool
 
-    def get_all_recipes(self) -> list[Recipes] | None:
+    def get_all_recipes(self) -> list[Recipe] | None:
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
@@ -35,28 +38,46 @@ class RecipesRepositoryImpl(RecipesRepository):
                     recipes = cursor.fetchall()
                     if not recipes:
                         return None
-                    return [Recipes(*row) for row in recipes]
+                    return [Recipe(*row) for row in recipes]
         except Exception as e:
-            raise ValueError(f"Error retrieving recipes from the database: {e}")
+            raise ValueError(f"Error retrieving recipes from the database: {e}") from e
         finally:
             self.conn_pool.putconn(conn)
 
-    def get_recipe_by_uuid(self, recipe_uuid: str) -> Recipes | None:
+    def get_recipe_by_dish_uuid(self, dish_uuid: str) -> list[RecipeIngredients] | None:
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute(
                         """
-                        SELECT * FROM taco.recipes
-                        WHERE uuid = %s
+                        select
+                            r.uuid,
+                            r.dish_uuid,
+                            nv.ingredient_uuid,
+                            nv.measurement_unit_uuid,
+                            d.name as "dish_name",
+                            i.name as "ingredient_name",
+                            mu.abbreviation as "measurement_unit",
+                            r.amount
+                        from
+                            recipes r
+                        join dishes d on
+                            d.uuid = r.dish_uuid
+                        join nutritional_values nv on
+                            nv.uuid = r.nutritional_value_uuid
+                        join ingredients i on
+                            i.uuid = nv.ingredient_uuid
+                        join measurement_units mu on
+                            mu.uuid = nv.measurement_unit_uuid
+                        where dish_uuid = %s
                         """,
-                        (recipe_uuid, )
+                        (dish_uuid, )
                     )
-                    recipe = cursor.fetchone()
+                    recipe = cursor.fetchall()
                     if recipe:
-                        return Recipes(*recipe)
+                        return [RecipeIngredients(*row) for row in recipe]
                     return None
         except Exception as e:
-            raise ValueError(f"Error retrieving recipe from the database: {e}")
+            raise ValueError(f"Error retrieving recipe from the database: {e}") from e
         finally:
             self.conn_pool.putconn(conn)

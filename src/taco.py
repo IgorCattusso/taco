@@ -9,9 +9,11 @@ from waitress import serve
 
 # Project-specific Modules
 from src.config import Config
-from src.controllers.controller import TestController
-from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase
-from src.use_cases.recipes_use_cases.get_recipe_use_case import GetRecipeUseCase
+from src.controllers.recipes_controller import RecipesController
+from src.controllers.dishes_controller import DishesController
+from src.controllers.ingredients_controller import IngredientsController
+from src.controllers.measurement_units_controller import MeasurementUnitsController
+from src.controllers.preparation_method import PreparationMethodsController
 from src.taco_injector_module import TacoModule
 
 
@@ -56,7 +58,11 @@ def create_app():
 
     # Create controllers
     controllers = [
-        taco_injector.get(TestController),
+        taco_injector.get(RecipesController),
+        taco_injector.get(DishesController),
+        taco_injector.get(IngredientsController),
+        taco_injector.get(MeasurementUnitsController),
+        taco_injector.get(PreparationMethodsController),
     ]
 
     for controller in controllers:
