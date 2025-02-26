@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 # Third-Party Libraries
 from injector import inject
-from psycopg2 import pool
+from psycopg2 import pool, DatabaseError
 
 # Project-specific Modules
 from src.entities.preparation_method import PreparationMethod
@@ -35,7 +35,10 @@ class PreparationMethodsRepositoryImpl(PreparationMethodsRepository):
                     if not preparation_method:
                         return None
                     return PreparationMethod(*preparation_method)
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving the preparation method: {e}') from e
         except Exception as e:
-            raise ValueError(f"Error retrieving preparation method from the database: {e}")
+            raise RuntimeError(f'An unexpected error was found while retrieving the preparation method: {e}') from e
         finally:
-            self.conn_pool.putconn(conn)
+            if conn:
+                self.conn_pool.putconn(conn)

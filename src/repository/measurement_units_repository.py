@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 # Third-Party Libraries
 from injector import inject
-from psycopg2 import pool
+from psycopg2 import pool, DatabaseError
 
 # Project-specific Modules
 from src.entities.measurement_units import MeasurementUnits
@@ -33,7 +33,10 @@ class MeasurementUnitsRepositoryImpl(MeasurementUnitsRepository):
                     if not measurement_units:
                         return None
                     return [MeasurementUnits(*row) for row in measurement_units]
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
-            raise ValueError(f"Error retrieving measurement units from the database: {e}")
+            raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
         finally:
-            self.conn_pool.putconn(conn)
+            if conn:
+                self.conn_pool.putconn(conn)

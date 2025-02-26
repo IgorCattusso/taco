@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 # Third-Party Libraries
 from injector import inject
-from psycopg2 import pool
+from psycopg2 import pool, DatabaseError
 
 # Project-specific Modules
 from src.entities.nutritional_values import NutritionalValues
@@ -33,7 +33,10 @@ class NutritionalValuesRepositoryImpl(NutritionalValuesRepository):
                     if not nutritional_values:
                         return None
                     return [NutritionalValues(*row) for row in nutritional_values]
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
-            raise ValueError(f"Error retrieving nutritional values from the database: {e}")
+            raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
         finally:
-            self.conn_pool.putconn(conn)
+            if conn:
+                self.conn_pool.putconn(conn)

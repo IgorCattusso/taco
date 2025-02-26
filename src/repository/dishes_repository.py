@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 # Third-Party Libraries
 from injector import inject
-from psycopg2 import pool
+from psycopg2 import pool, DatabaseError
 
 # Project-specific Modules
 from src.entities.dishes import Dishes
@@ -33,7 +33,10 @@ class DishesRepositoryImpl(DishesRepository):
                     if not dishes:
                         return None
                     return [Dishes(*row) for row in dishes]
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
-            raise ValueError(f"Error retrieving dishes from the database: {e}")
+            raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
         finally:
-            self.conn_pool.putconn(conn)
+            if conn:
+                self.conn_pool.putconn(conn)

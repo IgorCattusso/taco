@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 # Third-Party Libraries
 from injector import inject
-from psycopg2 import pool
+from psycopg2 import pool, DatabaseError
 
 # Project-specific Modules
 from src.entities.recipes import Recipe, RecipeIngredients
@@ -39,10 +39,13 @@ class RecipesRepositoryImpl(RecipesRepository):
                     if not recipes:
                         return None
                     return [Recipe(*row) for row in recipes]
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
-            raise ValueError(f"Error retrieving recipes from the database: {e}") from e
+            raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
         finally:
-            self.conn_pool.putconn(conn)
+            if conn:
+                self.conn_pool.putconn(conn)
 
     def get_recipe_by_dish_uuid(self, dish_uuid: str) -> list[RecipeIngredients] | None:
         try:
@@ -77,7 +80,10 @@ class RecipesRepositoryImpl(RecipesRepository):
                     if recipe:
                         return [RecipeIngredients(*row) for row in recipe]
                     return None
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
-            raise ValueError(f"Error retrieving recipe from the database: {e}") from e
+            raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
         finally:
-            self.conn_pool.putconn(conn)
+            if conn:
+                self.conn_pool.putconn(conn)
