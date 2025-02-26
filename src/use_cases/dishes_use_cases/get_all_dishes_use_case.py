@@ -21,13 +21,8 @@ class GetAllDishesUseCaseImpl(GetAllDishesUseCase):
 
     def execute(self) -> dict:
         dishes = self.dishes_repository.get_all_dishes()
-        all_dishes = {"dishes": []}
-        for dish in dishes:
-            all_dishes["dishes"].append(
-                {
-                    "dish_uuid": dish.uuid,
-                    "dish_name": dish.name
-                }
-            )
 
-        return all_dishes
+        if not dishes:
+            raise ValueError("No dishes were found in the database.")
+
+        return {"dishes": [{"dish_uuid": dish.uuid, "dish_name": dish.name} for dish in dishes]}

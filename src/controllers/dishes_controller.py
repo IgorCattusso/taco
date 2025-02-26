@@ -8,7 +8,11 @@ from src.use_cases.dishes_use_cases.get_all_dishes_use_case import GetAllDishesU
 
 class DishesController:
     @inject
-    def __init__(self, app: Flask, get_all_dishes_use_case: GetAllDishesUseCase) -> None:
+    def __init__(
+            self,
+            app: Flask,
+            get_all_dishes_use_case: GetAllDishesUseCase
+        ) -> None:
         self.app = app
         self.get_all_dishes_use_case = get_all_dishes_use_case
 
@@ -22,6 +26,7 @@ class DishesController:
     def get_all_dishes(self):
         try:
             return self.get_all_dishes_use_case.execute()
-
-        except Exception as e:
+        except ValueError as e:
+            return jsonify({'message': str(e)}), 404
+        except RuntimeError as e:
             return jsonify({'message': str(e)}), 500

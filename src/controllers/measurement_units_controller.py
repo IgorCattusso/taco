@@ -8,7 +8,11 @@ from src.use_cases.measurement_units_use_cases.get_all_measurement_units_use_cas
 
 class MeasurementUnitsController:
     @inject
-    def __init__(self, app: Flask, get_all_measurement_units_use_case: GetAllMeasurementUnitsUseCase) -> None:
+    def __init__(
+            self,
+            app: Flask,
+            get_all_measurement_units_use_case: GetAllMeasurementUnitsUseCase
+        ) -> None:
         self.app = app
         self.get_all_measurement_units_use_case = get_all_measurement_units_use_case
 
@@ -22,6 +26,7 @@ class MeasurementUnitsController:
     def get_all_measurement_units(self):
         try:
             return self.get_all_measurement_units_use_case.execute()
-
-        except Exception as e:
+        except ValueError as e:
+            return jsonify({'message': str(e)}), 404
+        except RuntimeError as e:
             return jsonify({'message': str(e)}), 500

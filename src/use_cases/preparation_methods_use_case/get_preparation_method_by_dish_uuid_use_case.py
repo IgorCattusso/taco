@@ -20,4 +20,8 @@ class GetPreparationMethodByDishUuidUseCaseImpl(GetPreparationMethodByDishUuidUs
         self.preparation_methods_repository = preparation_methods_repository
 
     def execute(self, dish_uuid: str) -> str:
-        return self.preparation_methods_repository.get_dish_preparation_method(dish_uuid).preparation_method
+        preparation_method = self.preparation_methods_repository.get_dish_preparation_method(dish_uuid)
+        if preparation_method:
+            return preparation_method.preparation_method
+
+        raise ValueError('The provided uuid was not found in the database.')

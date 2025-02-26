@@ -21,13 +21,14 @@ class GetAllMeasurementUnitsUseCaseImpl(GetAllMeasurementUnitsUseCase):
 
     def execute(self) -> dict:
         measurement_units = self.measurement_units_repository.get_all_measurement_units()
-        all_measurement_units = {"measurement_units": []}
-        for measurement_unit in measurement_units:
-            all_measurement_units["measurement_units"].append(
-                {
-                    "dish_uuid": measurement_unit.uuid,
-                    "dish_name": measurement_unit.name
-                }
-            )
 
-        return all_measurement_units
+        if not measurement_units:
+            raise ValueError("No measurement units were found in the database.")
+
+        return {
+            "measurement_units": [{
+                "measurement_unit_uuid": measurement_unit.uuid, 
+                "measurement_unit_name": measurement_unit.name,
+                "measurement_unit_abbreviation": measurement_unit.abbreviation,
+            } for measurement_unit in measurement_units]
+        }

@@ -22,6 +22,7 @@ class IngredientsController:
     def get_all_ingredients(self):
         try:
             return self.get_all_ingredients_use_case.execute()
-
-        except Exception as e:
+        except ValueError as e:
+            return jsonify({'message': str(e)}), 404
+        except RuntimeError as e:
             return jsonify({'message': str(e)}), 500
