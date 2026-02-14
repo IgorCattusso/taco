@@ -1,8 +1,6 @@
-# Third-Party Libraries
 from flask import Flask, jsonify
 from injector import inject
 
-# Project-specific Modules
 from src.use_cases.recipes_use_cases.get_recipe_by_dish_uuid_use_case import GetRecipeByDishUuidUseCase
 from src.services.utils.utils import Utils
 

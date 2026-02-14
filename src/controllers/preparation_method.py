@@ -1,8 +1,6 @@
-# Third-Party Libraries
 from flask import Flask, jsonify
 from injector import inject
 
-# Project-specific Modules
 from src.use_cases.preparation_methods_use_case.get_preparation_method_by_dish_uuid_use_case \
     import GetPreparationMethodByDishUuidUseCase
 from src.services.utils.utils import Utils

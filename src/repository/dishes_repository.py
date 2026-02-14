@@ -1,11 +1,8 @@
-# Standard Library
 from abc import ABC, abstractmethod
 
-# Third-Party Libraries
 from injector import inject
 from psycopg2 import pool, DatabaseError
 
-# Project-specific Modules
 from src.entities.dishes import Dishes
 
 

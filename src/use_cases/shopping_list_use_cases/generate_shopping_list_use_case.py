@@ -1,10 +1,6 @@
-# Standard Library
 from abc import ABC, abstractmethod
 
-# Third-Party Libraries
 from injector import inject
-
-# Project-specific Modules
 
 
 class GenerateShoppingListUseCase(ABC):

@@ -1,8 +1,6 @@
-# Third-Party Libraries
 from flask import Flask, jsonify
 from injector import inject
 
-# Project-specific Modules
 from src.use_cases.measurement_units_use_cases.get_all_measurement_units_use_case import GetAllMeasurementUnitsUseCase
 
 

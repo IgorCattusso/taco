@@ -1,13 +1,10 @@
-# Standard Library
 import sys
 
-# Third-Party Libraries
 from flask import Flask
 from injector import Injector
 from psycopg2 import pool, OperationalError
 from waitress import serve
 
-# Project-specific Modules
 from src.config import Config
 from src.controllers.recipes_controller import RecipesController
 from src.controllers.dishes_controller import DishesController
