@@ -1,10 +1,12 @@
 networks:
   taco_network:
     driver: bridge
+    name: taco_network
 
 volumes:
-  postgres_data:
+  taco_postgres:
     driver: local
+    name: taco_postgres
 
 services:
   taco_postgres:
@@ -18,14 +20,13 @@ services:
       POSTGRES_PASSWORD: taco
       POSTGRES_DB: taco
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - taco_postgres:/var/lib/postgresql/data
     networks:
       - taco_network
 
   taco:
     build:
       context: .
-      target: taco_svc
     ports:
       - "9000:9000"
     depends_on:
