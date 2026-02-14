@@ -1,17 +1,31 @@
 from uuid import uuid4
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from injector import inject
 from psycopg2 import pool, DatabaseError, errorcodes
 
 from src.entities.dishes import Dishes
-from src.dto.dish import Dish
 
 
 class DishesRepository(ABC):
     @abstractmethod
     def get_all_dishes(self) -> list[Dishes] | None:
+        pass
+
+    @abstractmethod
+    def get_dish(self, dish_uuid: str) -> Dishes | None:
+        pass
+
+    @abstractmethod
+    def create_dish(self, dish: Dishes) -> Dishes:
+        pass
+
+    @abstractmethod
+    def update_dish(self, dish: Dishes) -> Dishes | None:
+        pass
+
+    @abstractmethod
+    def delete_dish(self, dish_uuid: str) -> None:
         pass
 
 
@@ -24,24 +38,51 @@ class DishesRepositoryImpl(DishesRepository):
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT * FROM taco.dishes
-                        """
-                    )
+                    sql = "SELECT * FROM taco.dishes"
+
+                    cursor.execute(sql)
+
                     dishes = cursor.fetchall()
+
                     if not dishes:
                         return None
+
                     return [Dishes(*row) for row in dishes]
+
         except DatabaseError as e:
             raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
+
         finally:
             if conn:
                 self.conn_pool.putconn(conn)
 
-    def create_dish(self, dish: Dish) -> Optional[Dishes] | None:
+    def get_dish(self, dish_uuid: str) -> list[Dishes] | None:
+        try:
+            with self.conn_pool.getconn() as conn:
+                with conn.cursor() as cursor:
+
+                    sql = "SELECT * FROM taco.dishes WHERE uuid = %s"
+                    cursor.execute(sql, (dish_uuid,))
+
+                    dish = cursor.fetchone()
+
+                    if not dish:
+                        return None
+
+                    return Dishes(*dish)
+
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
+        except Exception as e:
+            raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
+
+        finally:
+            if conn:
+                self.conn_pool.putconn(conn)
+
+    def create_dish(self, dish: Dishes) -> Dishes:
         try:
             dish.uuid = uuid4()
 
@@ -62,9 +103,7 @@ class DishesRepositoryImpl(DishesRepository):
         except DatabaseError as e:
             if getattr(e, 'pgcode', None) == errorcodes.UNIQUE_VIOLATION:
                 raise RuntimeError(f"A dish with name '{dish.name}' already exists.") from e
-
             raise RuntimeError(f'A database error was found while creating the new dish: {e}') from e
-
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while creating the new dish: {e}') from e
 
@@ -72,13 +111,13 @@ class DishesRepositoryImpl(DishesRepository):
             if conn:
                 self.conn_pool.putconn(conn)
 
-    def update_dish(self, dish: Dish) -> Optional[Dishes] | None:
+    def update_dish(self, dish: Dishes) -> Dishes | None:
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
                     sql = "UPDATE taco.dishes SET name=%s WHERE uuid=%s RETURNING *"
 
-                    cursor.execute(sql, (dish.name, str(dish.uuid)))
+                    cursor.execute(sql, (dish.name, dish.uuid))
 
                     updated = cursor.fetchone()
                     conn.commit()
@@ -90,10 +129,32 @@ class DishesRepositoryImpl(DishesRepository):
 
         except ValueError as e:
             raise e
-
         except DatabaseError as e:
             raise RuntimeError(f'A database error was found while updating the dish: {e}') from e
+        except Exception as e:
+            raise RuntimeError(f'An unexpected error was found while updating the dish: {e}') from e
 
+        finally:
+            if conn:
+                self.conn_pool.putconn(conn)
+
+    def delete_dish(self, dish_uuid: str) -> None:
+        try:
+            with self.conn_pool.getconn() as conn:
+                with conn.cursor() as cursor:
+                    sql = "DELETE FROM taco.dishes WHERE uuid = %s"
+
+                    cursor.execute(sql, (dish_uuid, ))
+
+                    if cursor.rowcount == 0:
+                        raise ValueError(f"A dish with uuid '{dish_uuid}' was not found.")
+
+                    conn.commit()
+
+        except ValueError as e:
+            raise e
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while updating the dish: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while updating the dish: {e}') from e
 

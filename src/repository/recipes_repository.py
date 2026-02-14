@@ -73,14 +73,40 @@ class RecipesRepositoryImpl(RecipesRepository):
                         """,
                         (dish_uuid, )
                     )
+
                     recipe = cursor.fetchall()
+
                     if recipe:
                         return [RecipeIngredients(*row) for row in recipe]
+
                     return None
+
         except DatabaseError as e:
             raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
+
+        finally:
+            if conn:
+                self.conn_pool.putconn(conn)
+
+    def delete_recipe_by_dish_uuid(self, dish_uuid: str) -> None:
+        try:
+            with self.conn_pool.getconn() as conn:
+                with conn.cursor() as cursor:
+                    sql = "DELETE FROM taco.recipes WHERE dish_uuid = %s"
+
+                    cursor.execute(sql, (dish_uuid, ))
+
+                    conn.commit()
+
+        except ValueError as e:
+            raise e
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while deleting the recipe: {e}') from e
+        except Exception as e:
+            raise RuntimeError(f'An unexpected error was found while deleting the recipe: {e}') from e
+
         finally:
             if conn:
                 self.conn_pool.putconn(conn)

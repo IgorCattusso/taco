@@ -1,4 +1,4 @@
-class Dish:
+class DishDTO:
     def __init__(self, uuid=None, name=''):
         self.uuid = uuid
         self.name = name
