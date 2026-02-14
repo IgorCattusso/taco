@@ -71,3 +71,32 @@ class DishesRepositoryImpl(DishesRepository):
         finally:
             if conn:
                 self.conn_pool.putconn(conn)
+
+    def update_dish(self, dish: Dish) -> Optional[Dishes] | None:
+        try:
+            with self.conn_pool.getconn() as conn:
+                with conn.cursor() as cursor:
+                    sql = "UPDATE taco.dishes SET name=%s WHERE uuid=%s RETURNING *"
+
+                    cursor.execute(sql, (dish.name, str(dish.uuid)))
+
+                    updated = cursor.fetchone()
+                    conn.commit()
+
+                    if not updated:
+                        raise ValueError(f"A dish with uuid '{str(dish.uuid)}' was not found.")
+
+                    return Dishes(*updated)
+
+        except ValueError as e:
+            raise e
+
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while updating the dish: {e}') from e
+
+        except Exception as e:
+            raise RuntimeError(f'An unexpected error was found while updating the dish: {e}') from e
+
+        finally:
+            if conn:
+                self.conn_pool.putconn(conn)

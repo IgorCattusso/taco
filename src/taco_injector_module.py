@@ -39,6 +39,7 @@ from src.use_cases.measurement_units_use_cases.get_all_measurement_units_use_cas
 from src.use_cases.preparation_methods_use_case.get_preparation_method_by_dish_uuid_use_case import \
      GetPreparationMethodByDishUuidUseCase, GetPreparationMethodByDishUuidUseCaseImpl
 from src.use_cases.dishes_use_cases.create_dish_use_case import CreateDishUseCase, CreateDishUseCaseImpl
+from src.use_cases.dishes_use_cases.update_dish_use_case import UpdateDishUseCase, UpdateDishUseCaseImpl
 
 class TacoModule(Module):
     """
@@ -72,6 +73,7 @@ class TacoModule(Module):
         binder.bind(GetAllMeasurementUnitsUseCase, to=GetAllMeasurementUnitsUseCaseImpl)
         binder.bind(GetPreparationMethodByDishUuidUseCase, to=GetPreparationMethodByDishUuidUseCaseImpl)
         binder.bind(CreateDishUseCase, to=CreateDishUseCaseImpl)
+        binder.bind(UpdateDishUseCase, to=UpdateDishUseCaseImpl)
 
         # Controllers
         binder.bind(DishesController, to=DishesController)
