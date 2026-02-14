@@ -59,7 +59,7 @@ CREATE TABLE taco.recipes (
 	"uuid" uuid NOT NULL,
 	dish_uuid uuid NOT NULL,
 	nutritional_value_uuid uuid NOT NULL,
-	amount numeric NOT NULL,
+	quantity numeric NOT NULL,
 	CONSTRAINT recipes_pk PRIMARY KEY (uuid),
 	CONSTRAINT recipes_dishes_fk FOREIGN KEY (dish_uuid) REFERENCES taco.dishes("uuid") ON DELETE RESTRICT ON UPDATE RESTRICT,
 	CONSTRAINT recipes_nutritional_values_fk FOREIGN KEY (nutritional_value_uuid) REFERENCES taco.nutritional_values("uuid") ON DELETE RESTRICT ON UPDATE RESTRICT

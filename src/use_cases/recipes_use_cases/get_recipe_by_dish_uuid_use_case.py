@@ -23,7 +23,7 @@ class GetRecipeByDishUuidUseCaseImpl(GetRecipeByDishUuidUseCase):
                 "ingredient_uuid": ingredient.uuid,
                 "ingredient_name": ingredient.ingredient_name,
                 "measurement_unit": ingredient.measurement_unit,
-                "amount": ingredient.amount,
+                "quantity": ingredient.quantity,
             }
             for ingredient in recipe
         }

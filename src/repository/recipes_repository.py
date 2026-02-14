@@ -58,7 +58,7 @@ class RecipesRepositoryImpl(RecipesRepository):
                             d.name as "dish_name",
                             i.name as "ingredient_name",
                             mu.abbreviation as "measurement_unit",
-                            r.amount
+                            r.quantity
                         from
                             recipes r
                         join dishes d on

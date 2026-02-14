@@ -269,7 +269,7 @@ INSERT INTO taco.nutritional_values ("uuid", "ingredient_uuid", "measurement_uni
 ('6033ffc7-948a-4528-9572-116614fa9a88', 'ea50b2dd-5046-4ec7-afdb-79e70af7eae0', 'b027cdd4-5955-4389-903c-cdc4b90326d2', '2.29', '0.137', '0.543', '0.196', '0.00021', '0.332');
 
 -- Recipes
-INSERT INTO taco.recipes ("uuid", "dish_uuid", "nutritional_value_uuid", "amount") VALUES ('65220166-77fc-46a9-99c2-61baf972618e', 'd269a78c-1ed1-448a-9b69-e3d8d3993dc9', '821a3350-29f1-4077-89bb-cd82c9f7db0c', '1'),
+INSERT INTO taco.recipes ("uuid", "dish_uuid", "nutritional_value_uuid", "quantity") VALUES ('65220166-77fc-46a9-99c2-61baf972618e', 'd269a78c-1ed1-448a-9b69-e3d8d3993dc9', '821a3350-29f1-4077-89bb-cd82c9f7db0c', '1'),
 ('0df3b763-1a22-4f10-afa1-8a276f65b5d1', 'd269a78c-1ed1-448a-9b69-e3d8d3993dc9', 'bbf11e37-bf6c-47db-ba15-a90f23244d8d', '3'),
 ('871626c0-5fa2-4a47-b922-b26785327e6e', 'd269a78c-1ed1-448a-9b69-e3d8d3993dc9', '74a54ba2-debd-47a2-8833-18ece67af3ea', '150'),
 ('c206e7c6-1cf5-4945-86b0-3256c8b3fe81', 'd269a78c-1ed1-448a-9b69-e3d8d3993dc9', '8427af41-a4eb-48d3-8277-039e82021ad2', '0'),
