@@ -13,7 +13,7 @@ class IngredientsRepository(ABC):
         pass
 
     @abstractmethod
-    def create_ingredient(self) -> list[Ingredients] | None:
+    def create_ingredient(self, ingredient: Ingredients) -> list[Ingredients] | None:
         pass
 
     @abstractmethod
