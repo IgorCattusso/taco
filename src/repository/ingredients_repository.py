@@ -16,6 +16,18 @@ class IngredientsRepository(ABC):
     def create_ingredient(self) -> list[Ingredients] | None:
         pass
 
+    @abstractmethod
+    def get_ingredient(self, ingredient_uuid: str) -> list[Ingredients] | None:
+        pass
+
+    @abstractmethod
+    def update_ingredient(self, ingredient: Ingredients) -> Ingredients | None:
+        pass
+
+    @abstractmethod
+    def delete_ingredient(self, ingredient_uuid: str) -> None:
+        pass
+
 
 class IngredientsRepositoryImpl(IngredientsRepository):
     @inject
