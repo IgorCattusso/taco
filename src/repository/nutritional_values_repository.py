@@ -94,9 +94,26 @@ class NutritionalValuesRepositoryImpl(NutritionalValuesRepository):
 
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "INSERT INTO taco.nutritional_values (uuid, ingredient_uuid, measurement_unit_uuid, calories, fats, carbohydrates, proteins, sodium, fiber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING *"
+                    sql = \
+                        """
+                        INSERT INTO taco.nutritional_values 
+                        (uuid, ingredient_uuid, measurement_unit_uuid, calories, \
+                        fats, carbohydrates, proteins, sodium, fiber) 
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING *
+                        """
 
-                    cursor.execute(sql, (str(nutritional_value.uuid), nutritional_value.ingredient_uuid, nutritional_value.measurement_unit_uuid, nutritional_value.calories, nutritional_value.fats, nutritional_value.carbohydrates, nutritional_value.proteins, nutritional_value.sodium, nutritional_value.fiber))
+                    cursor.execute(
+                        sql,
+                        (str(nutritional_value.uuid),
+                        nutritional_value.ingredient_uuid,
+                        nutritional_value.measurement_unit_uuid,
+                        nutritional_value.calories,
+                        nutritional_value.fats,
+                        nutritional_value.carbohydrates,
+                        nutritional_value.proteins,
+                        nutritional_value.sodium,
+                        nutritional_value.fiber)
+                    )
 
                     inserted = cursor.fetchone()
                     conn.commit()
@@ -108,7 +125,7 @@ class NutritionalValuesRepositoryImpl(NutritionalValuesRepository):
 
         except DatabaseError as e:
             if getattr(e, 'pgcode', None) == errorcodes.UNIQUE_VIOLATION:
-                raise RuntimeError(f"A nutritional value for this ingredient already exists.") from e
+                raise RuntimeError('A nutritional value for this ingredient already exists.') from e
             raise RuntimeError(f'A database error was found while creating the new nutritional value: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while creating the new nutritional value: {e}') from e
@@ -121,15 +138,34 @@ class NutritionalValuesRepositoryImpl(NutritionalValuesRepository):
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "UPDATE taco.nutritional_values SET ingredient_uuid=%s, measurement_unit_uuid=%s, calories=%s, fats=%s, carbohydrates=%s, proteins=%s, sodium=%s, fiber=%s WHERE uuid=%s RETURNING *"
+                    sql = \
+                        """
+                        UPDATE taco.nutritional_values 
+                        SET ingredient_uuid=%s, measurement_unit_uuid=%s, calories=%s,
+                        fats=%s, carbohydrates=%s, proteins=%s, sodium=%s, fiber=%s
+                        WHERE uuid=%s RETURNING *
+                        """
 
-                    cursor.execute(sql, (nutritional_value.ingredient_uuid, nutritional_value.measurement_unit_uuid, nutritional_value.calories, nutritional_value.fats, nutritional_value.carbohydrates, nutritional_value.proteins, nutritional_value.sodium, nutritional_value.fiber, nutritional_value.uuid))
+                    cursor.execute(
+                        sql,
+                        (
+                            nutritional_value.ingredient_uuid,
+                            nutritional_value.measurement_unit_uuid,
+                            nutritional_value.calories,
+                            nutritional_value.fats,
+                            nutritional_value.carbohydrates,
+                            nutritional_value.proteins,
+                            nutritional_value.sodium,
+                            nutritional_value.fiber,
+                            nutritional_value.uuid
+                        )
+                    )
 
                     updated = cursor.fetchone()
                     conn.commit()
 
                     if not updated:
-                        raise ValueError(f"A nutritional value with uuid '{str(nutritional_value.uuid)}' was not found.")
+                        raise ValueError(f"Nutritional value with uuid '{str(nutritional_value.uuid)}' was not found.")
 
                     return NutritionalValues(*updated)
 

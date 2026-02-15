@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from injector import inject
 
 from src.repository.recipes_repository import RecipesRepository
+from src.entities.recipes import Recipe
 from src.dto.recipe import RecipeDTO
 
 
@@ -18,8 +19,6 @@ class CreateRecipeUseCaseImpl(CreateRecipeUseCase):
         self.recipes_repository = recipes_repository
 
     def execute(self, recipe: RecipeDTO) -> dict:
-        from src.entities.recipes import Recipe
-        
         recipe_to_create = Recipe(
             dish_uuid=recipe.dish_uuid,
             nutritional_value__uuid=recipe.nutritional_value_uuid,

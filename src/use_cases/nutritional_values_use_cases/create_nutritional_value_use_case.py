@@ -30,6 +30,7 @@ class CreateNutritionalValueUseCaseImpl(CreateNutritionalValueUseCase):
             fiber=nutritional_value.fiber,
         )
 
-        inserted_nutritional_value = self.nutritional_values_repository.create_nutritional_value(nutritional_value_to_create)
+        inserted_nutritional_value = \
+            self.nutritional_values_repository.create_nutritional_value(nutritional_value_to_create)
 
         return inserted_nutritional_value.__dict__

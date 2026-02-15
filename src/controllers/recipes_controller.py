@@ -154,4 +154,3 @@ class RecipesController:
             return jsonify({'message': str(e)}), 400
         except RuntimeError as e:
             return jsonify({'message': str(e)}), 500
-

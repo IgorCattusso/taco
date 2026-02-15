@@ -31,7 +31,8 @@ class UpdateNutritionalValueUseCaseImpl(UpdateNutritionalValueUseCase):
             fiber=nutritional_value.fiber,
         )
 
-        updated_nutritional_value = self.nutritional_values_repository.update_nutritional_value(nutritional_value_to_update)
+        updated_nutritional_value = \
+            self.nutritional_values_repository.update_nutritional_value(nutritional_value_to_update)
 
         nutritional_value_dto = NutritionalValueDTO(
             uuid=updated_nutritional_value.uuid,

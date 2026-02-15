@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request
 from injector import inject
 
-from src.use_cases.nutritional_values_use_cases.get_all_nutritional_values_use_case import GetAllNutritionalValuesUseCase
+from src.use_cases.nutritional_values_use_cases.get_all_nutritional_values_use_case import \
+    GetAllNutritionalValuesUseCase
 from src.use_cases.nutritional_values_use_cases.get_nutritional_value_use_case import GetNutritionalValueUseCase
 from src.use_cases.nutritional_values_use_cases.create_nutritional_value_use_case import CreateNutritionalValueUseCase
 from src.use_cases.nutritional_values_use_cases.update_nutritional_value_use_case import UpdateNutritionalValueUseCase

@@ -24,6 +24,7 @@ class CreateMeasurementUnitUseCaseImpl(CreateMeasurementUnitUseCase):
             abbreviation=measurement_unit.abbreviation,
         )
 
-        inserted_measurement_unit = self.measurement_units_repository.create_measurement_unit(measurement_unit_to_create)
+        inserted_measurement_unit = \
+            self.measurement_units_repository.create_measurement_unit(measurement_unit_to_create)
 
         return inserted_measurement_unit.__dict__

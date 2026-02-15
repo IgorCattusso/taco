@@ -25,7 +25,8 @@ class UpdatePreparationMethodUseCaseImpl(UpdatePreparationMethodUseCase):
             preparation_method=preparation_method.preparation_method,
         )
 
-        updated_preparation_method = self.preparation_methods_repository.update_preparation_method(preparation_method_to_update)
+        updated_preparation_method = \
+            self.preparation_methods_repository.update_preparation_method(preparation_method_to_update)
 
         preparation_method_dto = PreparationMethodDTO(
             uuid=updated_preparation_method.uuid,

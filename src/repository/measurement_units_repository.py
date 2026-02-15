@@ -84,9 +84,20 @@ class MeasurementUnitsRepositoryImpl(MeasurementUnitsRepository):
 
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "INSERT INTO taco.measurement_units (uuid, name, abbreviation) VALUES (%s, %s, %s) RETURNING *"
+                    sql = \
+                        """
+                        INSERT INTO taco.measurement_units (uuid, name, abbreviation)
+                        VALUES (%s, %s, %s) RETURNING *
+                        """
 
-                    cursor.execute(sql, (str(measurement_unit.uuid), measurement_unit.name, measurement_unit.abbreviation))
+                    cursor.execute(
+                        sql,
+                        (
+                            str(measurement_unit.uuid),
+                            measurement_unit.name,
+                            measurement_unit.abbreviation
+                        )
+                    )
 
                     inserted = cursor.fetchone()
                     conn.commit()

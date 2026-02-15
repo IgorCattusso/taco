@@ -1,6 +1,5 @@
 from uuid import uuid4
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from injector import inject
 from psycopg2 import pool, DatabaseError, errorcodes
@@ -116,9 +115,20 @@ class PreparationMethodsRepositoryImpl(PreparationMethodsRepository):
 
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "INSERT INTO taco.preparation_method (uuid, dish_uuid, preparation_method) VALUES (%s, %s, %s) RETURNING *"
+                    sql = \
+                        """
+                        INSERT INTO taco.preparation_method(uuid, dish_uuid, preparation_method)
+                        VALUES (%s, %s, %s) RETURNING *
+                        """
 
-                    cursor.execute(sql, (str(preparation_method.uuid), preparation_method.dish_uuid, preparation_method.preparation_method))
+                    cursor.execute(
+                        sql,
+                        (
+                            str(preparation_method.uuid),
+                            preparation_method.dish_uuid,
+                            preparation_method.preparation_method
+                        )
+                    )
 
                     inserted = cursor.fetchone()
                     conn.commit()
@@ -130,7 +140,7 @@ class PreparationMethodsRepositoryImpl(PreparationMethodsRepository):
 
         except DatabaseError as e:
             if getattr(e, 'pgcode', None) == errorcodes.UNIQUE_VIOLATION:
-                raise RuntimeError(f"A preparation method for this dish already exists.") from e
+                raise RuntimeError('A preparation method for this dish already exists.') from e
             raise RuntimeError(f'A database error was found while creating the new preparation method: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while creating the new preparation method: {e}') from e
@@ -143,15 +153,27 @@ class PreparationMethodsRepositoryImpl(PreparationMethodsRepository):
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "UPDATE taco.preparation_method SET dish_uuid=%s, preparation_method=%s WHERE uuid=%s RETURNING *"
+                    sql = \
+                        """
+                        UPDATE taco.preparation_method
+                        SET dish_uuid=%s, preparation_method=%s
+                        WHERE uuid=%s RETURNING *
+                        """
 
-                    cursor.execute(sql, (preparation_method.dish_uuid, preparation_method.preparation_method, preparation_method.uuid))
+                    cursor.execute(
+                        sql,
+                        (
+                            preparation_method.dish_uuid,
+                            preparation_method.preparation_method,
+                            preparation_method.uuid
+                        )
+                    )
 
                     updated = cursor.fetchone()
                     conn.commit()
 
                     if not updated:
-                        raise ValueError(f"A preparation method with uuid '{str(preparation_method.uuid)}' was not found.")
+                        raise ValueError(f"Preparation method with uuid '{str(preparation_method.uuid)}' not found.")
 
                     return PreparationMethod(*updated)
 

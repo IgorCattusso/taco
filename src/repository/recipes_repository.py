@@ -138,9 +138,22 @@ class RecipesRepositoryImpl(RecipesRepository):
 
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "INSERT INTO taco.recipes (uuid, dish_uuid, nutritional_value_uuid, quantity) VALUES (%s, %s, %s, %s) RETURNING *"
+                    sql = \
+                        """
+                        INSERT INTO taco.recipes 
+                        (uuid, dish_uuid, nutritional_value_uuid, quantity) 
+                        VALUES (%s, %s, %s, %s) RETURNING *
+                        """
 
-                    cursor.execute(sql, (str(recipe.uuid), recipe.dish_uuid, recipe.nutritional_value__uuid, recipe.quantity))
+                    cursor.execute(
+                        sql,
+                        (
+                            str(recipe.uuid),
+                            recipe.dish_uuid,
+                            recipe.nutritional_value__uuid,
+                            recipe.quantity
+                        )
+                    )
 
                     inserted = cursor.fetchone()
                     conn.commit()
@@ -152,7 +165,7 @@ class RecipesRepositoryImpl(RecipesRepository):
 
         except DatabaseError as e:
             if getattr(e, 'pgcode', None) == errorcodes.UNIQUE_VIOLATION:
-                raise RuntimeError(f"A recipe with these parameters already exists.") from e
+                raise RuntimeError('A recipe with these parameters already exists.') from e
             raise RuntimeError(f'A database error was found while creating the new recipe: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while creating the new recipe: {e}') from e
@@ -165,9 +178,22 @@ class RecipesRepositoryImpl(RecipesRepository):
         try:
             with self.conn_pool.getconn() as conn:
                 with conn.cursor() as cursor:
-                    sql = "UPDATE taco.recipes SET dish_uuid=%s, nutritional_value_uuid=%s, quantity=%s WHERE uuid=%s RETURNING *"
+                    sql = \
+                        """
+                        UPDATE taco.recipes
+                        SET dish_uuid=%s, nutritional_value_uuid=%s, quantity=%s
+                        WHERE uuid=%s RETURNING *
+                        """
 
-                    cursor.execute(sql, (recipe.dish_uuid, recipe.nutritional_value__uuid, recipe.quantity, recipe.uuid))
+                    cursor.execute(
+                        sql,
+                        (
+                            recipe.dish_uuid,
+                            recipe.nutritional_value__uuid,
+                            recipe.quantity,
+                            recipe.uuid
+                        )
+                    )
 
                     updated = cursor.fetchone()
                     conn.commit()
