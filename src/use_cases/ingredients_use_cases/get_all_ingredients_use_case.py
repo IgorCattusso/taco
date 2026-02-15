@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from injector import inject
 
 from src.repository.ingredients_repository import IngredientsRepository
+from src.dto.ingredient import IngredientDTO
 
 
 class GetAllIngredientsUseCase(ABC):
@@ -22,9 +23,11 @@ class GetAllIngredientsUseCaseImpl(GetAllIngredientsUseCase):
         if not ingredients:
             raise ValueError("No ingredients were found in the database.")
 
-        return {
-            "dishes": [{
-                "ingredient_uuid": ingredient.uuid, 
-                "ingredient_name": ingredient.name
-            } for ingredient in ingredients]
-        }
+        ingredients_dto = [
+            IngredientDTO(
+                uuid=ingredient.uuid,
+                name=ingredient.name
+            ) for ingredient in ingredients
+        ]
+
+        return ingredients_dto

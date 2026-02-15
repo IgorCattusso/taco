@@ -27,23 +27,34 @@ from src.repository.recipes_repository import RecipesRepository, RecipesReposito
 from src.services.utils.utils import Utils, UtilsImpl
 
 # Use Cases
-from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase, \
-    GenerateShoppingListUseCaseImpl
-from src.use_cases.recipes_use_cases.get_recipe_by_dish_uuid_use_case import GetRecipeByDishUuidUseCase, \
-    GetRecipeByDishUuidUseCaseImpl
+## Dishes
 from src.use_cases.dishes_use_cases.get_all_dishes_use_case import GetAllDishesUseCase, GetAllDishesUseCaseImpl
-from src.use_cases.ingredients_use_cases.get_all_ingredients_use_case import GetAllIngredientsUseCase, \
-    GetAllIngredientsUseCaseImpl
-from src.use_cases.measurement_units_use_cases.get_all_measurement_units_use_case import \
-    GetAllMeasurementUnitsUseCase, GetAllMeasurementUnitsUseCaseImpl
-from src.use_cases.preparation_methods_use_case.get_preparation_method_by_dish_uuid_use_case import \
-    GetPreparationMethodByDishUuidUseCase, GetPreparationMethodByDishUuidUseCaseImpl
-from src.use_cases.preparation_methods_use_case.delete_preparation_method_use_case import \
-    DeletePreparationMethodUseCase, DeletePreparationMethodhUseCaseImpl
 from src.use_cases.dishes_use_cases.create_dish_use_case import CreateDishUseCase, CreateDishUseCaseImpl
 from src.use_cases.dishes_use_cases.update_dish_use_case import UpdateDishUseCase, UpdateDishUseCaseImpl
 from src.use_cases.dishes_use_cases.get_dish_use_case import GetDishUseCase, GetDishUseCaseImpl
 from src.use_cases.dishes_use_cases.delete_dish_use_case import DeleteDishUseCase, DeleteDishUseCaseImpl
+## Ingredients
+from src.use_cases.ingredients_use_cases.get_all_ingredients_use_case import GetAllIngredientsUseCase, \
+    GetAllIngredientsUseCaseImpl
+from src.use_cases.ingredients_use_cases.get_ingredient_use_case import GetIngredientUseCase, GetIngredientUseCaseImpl
+from src.use_cases.ingredients_use_cases.create_ingredient_use_case import CreateIngredientUseCase, CreateIngredientUseCaseImpl
+from src.use_cases.ingredients_use_cases.update_ingredient_use_case import UpdateIngredientUseCase, UpdateIngredientUseCaseImpl
+from src.use_cases.ingredients_use_cases.delete_ingredient_use_case import DeleteIngredientUseCase, DeleteIngredientUseCaseImpl
+## Measurement Units
+from src.use_cases.measurement_units_use_cases.get_all_measurement_units_use_case import \
+    GetAllMeasurementUnitsUseCase, GetAllMeasurementUnitsUseCaseImpl
+## Nutritional Values
+## Preparation Methods
+from src.use_cases.preparation_methods_use_case.get_preparation_method_by_dish_uuid_use_case import \
+    GetPreparationMethodByDishUuidUseCase, GetPreparationMethodByDishUuidUseCaseImpl
+from src.use_cases.preparation_methods_use_case.delete_preparation_method_use_case import \
+    DeletePreparationMethodUseCase, DeletePreparationMethodhUseCaseImpl
+## Recipes
+from src.use_cases.recipes_use_cases.get_recipe_by_dish_uuid_use_case import GetRecipeByDishUuidUseCase, \
+    GetRecipeByDishUuidUseCaseImpl
+## Shopping List
+from src.use_cases.shopping_list_use_cases.generate_shopping_list_use_case import GenerateShoppingListUseCase, \
+    GenerateShoppingListUseCaseImpl
 
 
 class TacoModule(Module):
@@ -71,17 +82,28 @@ class TacoModule(Module):
         binder.bind(Utils, to=UtilsImpl)
 
         # Use cases
-        binder.bind(GenerateShoppingListUseCase, to=GenerateShoppingListUseCaseImpl)
-        binder.bind(GetRecipeByDishUuidUseCase, to=GetRecipeByDishUuidUseCaseImpl)
+        ## Dishes
         binder.bind(GetAllDishesUseCase, to=GetAllDishesUseCaseImpl)
-        binder.bind(GetAllIngredientsUseCase, to=GetAllIngredientsUseCaseImpl)
-        binder.bind(GetAllMeasurementUnitsUseCase, to=GetAllMeasurementUnitsUseCaseImpl)
-        binder.bind(GetPreparationMethodByDishUuidUseCase, to=GetPreparationMethodByDishUuidUseCaseImpl)
-        binder.bind(DeletePreparationMethodUseCase, to=DeletePreparationMethodhUseCaseImpl)
         binder.bind(CreateDishUseCase, to=CreateDishUseCaseImpl)
         binder.bind(UpdateDishUseCase, to=UpdateDishUseCaseImpl)
         binder.bind(GetDishUseCase, to=GetDishUseCaseImpl)
         binder.bind(DeleteDishUseCase, to=DeleteDishUseCaseImpl)
+        ## Ingredients
+        binder.bind(GetAllIngredientsUseCase, to=GetAllIngredientsUseCaseImpl)
+        binder.bind(GetIngredientUseCase, to=GetIngredientUseCaseImpl)
+        binder.bind(CreateIngredientUseCase, to=CreateIngredientUseCaseImpl)
+        binder.bind(UpdateIngredientUseCase, to=UpdateIngredientUseCaseImpl)
+        binder.bind(DeleteIngredientUseCase, to=DeleteIngredientUseCaseImpl)
+        ## Measurement Units
+        binder.bind(GetAllMeasurementUnitsUseCase, to=GetAllMeasurementUnitsUseCaseImpl)
+        ## Nutritional Values
+        ## Preparation Methods
+        binder.bind(GetPreparationMethodByDishUuidUseCase, to=GetPreparationMethodByDishUuidUseCaseImpl)
+        binder.bind(DeletePreparationMethodUseCase, to=DeletePreparationMethodhUseCaseImpl)
+        ## Recipes
+        binder.bind(GetRecipeByDishUuidUseCase, to=GetRecipeByDishUuidUseCaseImpl)
+        ## Shopping List
+        binder.bind(GenerateShoppingListUseCase, to=GenerateShoppingListUseCaseImpl)
 
         # Controllers
         binder.bind(DishesController, to=DishesController)

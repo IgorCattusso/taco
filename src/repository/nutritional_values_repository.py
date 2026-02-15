@@ -26,14 +26,41 @@ class NutritionalValuesRepositoryImpl(NutritionalValuesRepository):
                         SELECT * FROM taco.nutritional_values
                         """
                     )
+
                     nutritional_values = cursor.fetchall()
                     if not nutritional_values:
-                        return None
+                        raise ValueError("No nutritional values found.")
+
                     return [NutritionalValues(*row) for row in nutritional_values]
+
+        except ValueError as e:
+            raise e
         except DatabaseError as e:
             raise RuntimeError(f'A database error was found while retrieving data: {e}') from e
         except Exception as e:
             raise RuntimeError(f'An unexpected error was found while retrieving data: {e}') from e
+
+        finally:
+            if conn:
+                self.conn_pool.putconn(conn)
+
+    def delete_nutritional_values_by_ingredient_uuid(self, ingredient_uuid: str) -> None:
+        try:
+            with self.conn_pool.getconn() as conn:
+                with conn.cursor() as cursor:
+                    sql = "DELETE FROM taco.nutritional_values WHERE ingredient_uuid = %s"
+
+                    cursor.execute(sql, (ingredient_uuid, ))
+
+                    conn.commit()
+
+        except ValueError as e:
+            raise e
+        except DatabaseError as e:
+            raise RuntimeError(f'A database error was found while deleting the recipe: {e}') from e
+        except Exception as e:
+            raise RuntimeError(f'An unexpected error was found while deleting the recipe: {e}') from e
+
         finally:
             if conn:
                 self.conn_pool.putconn(conn)
