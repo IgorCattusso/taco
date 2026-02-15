@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from injector import inject
 
 from src.repository.measurement_units_repository import MeasurementUnitsRepository
+from src.dto.measurement_unit import MeasurementUnitDTO
 
 
 class GetAllMeasurementUnitsUseCase(ABC):
@@ -22,10 +23,12 @@ class GetAllMeasurementUnitsUseCaseImpl(GetAllMeasurementUnitsUseCase):
         if not measurement_units:
             raise ValueError("No measurement units were found in the database.")
 
-        return {
-            "measurement_units": [{
-                "measurement_unit_uuid": measurement_unit.uuid, 
-                "measurement_unit_name": measurement_unit.name,
-                "measurement_unit_abbreviation": measurement_unit.abbreviation,
-            } for measurement_unit in measurement_units]
-        }
+        measurement_units_dto = [
+            MeasurementUnitDTO(
+                uuid=measurement_unit.uuid,
+                name=measurement_unit.name,
+                abbreviation=measurement_unit.abbreviation,
+            ) for measurement_unit in measurement_units
+        ]
+
+        return measurement_units_dto

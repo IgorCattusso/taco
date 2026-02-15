@@ -10,7 +10,8 @@ from src.controllers.recipes_controller import RecipesController
 from src.controllers.dishes_controller import DishesController
 from src.controllers.ingredients_controller import IngredientsController
 from src.controllers.measurement_units_controller import MeasurementUnitsController
-from src.controllers.preparation_method import PreparationMethodsController
+from src.controllers.nutritional_values_controller import NutritionalValuesController
+from src.controllers.preparation_method_controller import PreparationMethodsController
 from src.taco_injector_module import TacoModule
 
 
@@ -59,6 +60,7 @@ def create_app():
         taco_injector.get(DishesController),
         taco_injector.get(IngredientsController),
         taco_injector.get(MeasurementUnitsController),
+        taco_injector.get(NutritionalValuesController),
         taco_injector.get(PreparationMethodsController),
     ]
 
